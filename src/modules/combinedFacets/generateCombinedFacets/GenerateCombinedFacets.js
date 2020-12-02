@@ -2,6 +2,7 @@ import React from 'react';
 import { List, Input, ViewMore } from '../../../components';
 import TextFacetItem from './TextFacetItem';
 import RangeFacetItem from './RangeFacetItem';
+import MultiLevelFacetItem from './MultiLevelFacetItem';
 import { searchStatus, facetTypes } from '../../../config';
 import { executeCallback } from '../../../common/utils';
 
@@ -293,7 +294,9 @@ class GenerateCombinedFacets extends React.Component {
             rangeFacetItemComponent,
             priceUnit,
             enableViewMore,
-            minViewMore
+            minViewMore,
+            multiLevelFacetItemComponent,
+            onMultiLevelFacetClick
         } = this.props;
 
         const { combinedFacetsList } = this.state;
@@ -396,72 +399,140 @@ class GenerateCombinedFacets extends React.Component {
                             </div>
                         );
                     }
-                    const {
-                        displayName,
-                        isOpen = true,
-                        facetName,
-                        values,
-                        isSelected,
-                        viewLess,
-                        className
-                    } = combinedFacet;
-                    return (
-                        <div className="UNX-rangefacet__container">
-                            <div
-                                className={`UNX-facet__element ${
-                                    isOpen ? 'open' : ''
-                                }`}
-                                key={facetName}
-                            >
-                                <div className="UNX-facet__headerContainer">
-                                    <div className="UNX-facet__header">
-                                        {displayName}
-                                        {collapsible && (
-                                            <span
-                                                className="-collapse-icon"
-                                                data-unx_name={facetName}
-                                                onClick={
-                                                    this.handleCollapseToggle
-                                                }
-                                            />
-                                        )}
+                    if(combinedFacet.facetType === facetTypes.RANGE_FACET){
+                        const {
+                            displayName,
+                            isOpen = true,
+                            facetName,
+                            values,
+                            isSelected,
+                            viewLess,
+                            className
+                        } = combinedFacet;
+                        return (
+                            <div className="UNX-rangefacet__container">
+                                <div
+                                    className={`UNX-facet__element ${
+                                        isOpen ? 'open' : ''
+                                    }`}
+                                    key={facetName}
+                                >
+                                    <div className="UNX-facet__headerContainer">
+                                        <div className="UNX-facet__header">
+                                            {displayName}
+                                            {collapsible && (
+                                                <span
+                                                    className="-collapse-icon"
+                                                    data-unx_name={facetName}
+                                                    onClick={
+                                                        this.handleCollapseToggle
+                                                    }
+                                                />
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                                <List
-                                    items={values}
-                                    ListItem={
-                                        rangeFacetItemComponent ||
-                                        RangeFacetItem
-                                    }
-                                    onClick={this.handleRangeFacetClick}
-                                    idAttribute={facetName}
-                                    facetName={facetName}
-                                    className={className}
-                                    priceUnit={priceUnit}
-                                />
-                                {isSelected && (
-                                    <div
-                                        onClick={this.onRangeFacetClear}
-                                        data-unx_facetname={facetName}
-                                        className="-clear"
-                                    >
-                                        Clear
-                                    </div>
-                                )}
-                                {enableViewMore &&
-                                isOpen &&
-                                values &&
-                                values.length > minViewMore ? (
-                                    <ViewMore
+                                    <List
+                                        items={values}
+                                        ListItem={
+                                            rangeFacetItemComponent ||
+                                            RangeFacetItem
+                                        }
+                                        onClick={this.handleRangeFacetClick}
+                                        idAttribute={facetName}
                                         facetName={facetName}
-                                        toggleViewLess={this.toggleViewLess}
-                                        viewLess={viewLess}
+                                        className={className}
+                                        priceUnit={priceUnit}
                                     />
-                                ) : null}
+                                    {isSelected && (
+                                        <div
+                                            onClick={this.onRangeFacetClear}
+                                            data-unx_facetname={facetName}
+                                            className="-clear"
+                                        >
+                                            Clear
+                                        </div>
+                                    )}
+                                    {enableViewMore &&
+                                    isOpen &&
+                                    values &&
+                                    values.length > minViewMore ? (
+                                        <ViewMore
+                                            facetName={facetName}
+                                            toggleViewLess={this.toggleViewLess}
+                                            viewLess={viewLess}
+                                        />
+                                    ) : null}
+                                </div>
                             </div>
+                        );
+                    }
+                    const {
+                        facetDisplayName,
+                        filterField,
+                        values = [],
+                        isOpen = true,
+                        filter = '',
+                        viewLess
+                    } = combinedFacet;
+
+                    let filteredValues = values;
+                    if (filter.length > 0) {
+                        filteredValues = values.filter((value) => {
+                            return value.name.toLowerCase().includes(filter);
+                        });
+                    }
+
+                    return (
+                        <div
+                            className={`UNX-facet__element ${
+                                isOpen ? 'open' : ''
+                            }`}
+                            key={filterField}
+                        >
+                            <div className="UNX-facet__header">
+                                {facetDisplayName}
+
+                                {collapsible && (
+                                    <span
+                                        className="-collapse-icon"
+                                        data-unx_name={facetDisplayName}
+                                        onClick={this.handleCollapseToggle}
+                                    />
+                                )}
+                            </div>
+
+                            {searchable && isOpen && (
+                                <div className="UNX-facetFilter__container">
+                                    <Input
+                                        className="-input"
+                                        value={filter}
+                                        name={facetDisplayName}
+                                        onChange={this.handleFilterChange}
+                                        data-testid={'UNX_searchFacets'}
+                                    />
+                                </div>
+                            )}
+                            <List
+                                items={filteredValues}
+                                ListItem={multiLevelFacetItemComponent || MultiLevelFacetItem}
+                                idAttribute={'name'}
+                                onClick={onMultiLevelFacetClick}
+                                className={`UNX-facet__list ${
+                                    viewLess ? 'UNX-facet__listShowLimited' : ''
+                                }`}
+                            />
+                            {enableViewMore &&
+                            isOpen &&
+                            filteredValues.length > minViewMore ? (
+                                <ViewMore
+                                    facetName={facetDisplayName}
+                                    toggleViewLess={this.toggleViewLess}
+                                    viewLess={viewLess}
+                                />
+                            ) : null}
                         </div>
                     );
-                })}
+                })} 
             </div>
         );
     }

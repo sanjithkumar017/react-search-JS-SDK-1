@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { facetTypes } from '../../config';
+
 
 import { conditionalRenderer } from '../../common/utils';
 import { getFacetCoreMethods } from './utils';
@@ -47,34 +49,38 @@ class MultilevelFacetsContainer extends React.PureComponent {
         } = getFacetCoreMethods(unbxdCore);
 
         const bucketedFacets = getBucketedFacets();
-        const breadCrumbsList = getBreadCrumbsList();
 
         const multilevelFacets = [];
         let highestBreadcrumbLevel = 0;
-        const breadCrumbFacets = breadCrumbsList.map((breadcrumb) => {
-            const { filterField, level, value } = breadcrumb;
-            if (highestBreadcrumbLevel < level) {
-                highestBreadcrumbLevel = level;
-            }
-            return {
-                fieldName: filterField,
-                level,
-                name: value,
-                isSelected: true
-            };
-        });
+        
 
         let facetDisplayName = '';
-        let fieldName = '';
         bucketedFacets.map((bucketedFacet) => {
             const {
                 displayName,
                 level,
+                position,
                 multiLevelField,
+                facetName,
+                filterField,
                 values = []
             } = bucketedFacet;
             facetDisplayName = displayName;
-            fieldName = multiLevelField;
+
+            const breadCrumbsList = getBreadCrumbsList(filterField);
+            highestBreadcrumbLevel = 0;
+
+            const breadCrumbFacets = breadCrumbsList.map((breadcrumb) => {
+                if (highestBreadcrumbLevel < breadcrumb.level) {
+                    highestBreadcrumbLevel = breadcrumb.level;
+                }
+                return {
+                    filterField: breadcrumb.filterField,
+                    level: breadcrumb.level,
+                    name: breadcrumb.value,
+                    isSelected: true
+                };
+            });
 
             let formattedBucketedFacets = [];
             if (
@@ -91,7 +97,7 @@ class MultilevelFacetsContainer extends React.PureComponent {
                 formattedBucketedFacets = [
                     {
                         ...hit,
-                        fieldName: multiLevelField,
+                        filterField,
                         level,
                         isSelected: true
                     }
@@ -101,7 +107,7 @@ class MultilevelFacetsContainer extends React.PureComponent {
                 formattedBucketedFacets = values.map((facetValue) => {
                     const { name, count, dataId } = facetValue;
                     return {
-                        fieldName: multiLevelField,
+                        filterField,
                         level,
                         name,
                         count,
@@ -112,14 +118,15 @@ class MultilevelFacetsContainer extends React.PureComponent {
 
             const facet = {
                 facetDisplayName,
-                multiLevelField: fieldName,
+                filterField,
                 values: [...breadCrumbFacets, ...formattedBucketedFacets]
             };
             multilevelFacets.push(facet);
         });
 
+
         const handleFacetClick = (currentItem) => {
-            const { name, fieldName: parent, level } = currentItem;
+            const { name, filterField: parent, level } = currentItem;
             const categoryObject = { parent, level, name };
             const { helpers } = this.props;
             const { getUpdatedResults } = helpers;
@@ -139,6 +146,7 @@ class MultilevelFacetsContainer extends React.PureComponent {
                         deleteCategoryFilter(categoryObject);
                     } else {
                         //check if it is a breadcrumb
+                        const breadCrumbsList = getBreadCrumbsList(parent);
                         const hit = breadCrumbsList.find(({ value }) => {
                             return name === value;
                         });
@@ -182,8 +190,8 @@ MultilevelFacetsContainer.propTypes = {
     unbxdCore: PropTypes.object.isRequired,
     unbxdCoreStatus: PropTypes.string.isRequired,
     helpers: PropTypes.object.isRequired,
-    categoryDisplayName: PropTypes.string.isRequired,
-    categoryField: PropTypes.string.isRequired,
+    //categoryDisplayName: PropTypes.string.isRequired,
+    //categoryField: PropTypes.string.isRequired,
     facetDepth: PropTypes.number,
     facetLimit: PropTypes.number,
     facetItemComponent: PropTypes.element,
