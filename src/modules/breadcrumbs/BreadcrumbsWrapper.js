@@ -12,7 +12,6 @@ const BreadcrumbsWrapper = (props) => {
         separator,
         breadcrumbItemComponent
     } = props;
-
     return breadCrumbsList.map((breadCrumbList) => {
         return (
             <div className={'UNX-breadcrumbs__container'}>

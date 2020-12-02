@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { facetTypes } from '../../config';
+
 
 import { conditionalRenderer } from '../../common/utils';
 import { getFacetCoreMethods } from './utils';
@@ -118,6 +120,7 @@ class MultilevelFacetsContainer extends React.PureComponent {
             multilevelFacets.push(facet);
         });
 
+
         const handleFacetClick = (currentItem) => {
             const { name, filterField: parent, level } = currentItem;
             const categoryObject = { parent, level, name };
@@ -183,8 +186,8 @@ MultilevelFacetsContainer.propTypes = {
     unbxdCore: PropTypes.object.isRequired,
     unbxdCoreStatus: PropTypes.string.isRequired,
     helpers: PropTypes.object.isRequired,
-    categoryDisplayName: PropTypes.string.isRequired,
-    categoryField: PropTypes.string.isRequired,
+    //categoryDisplayName: PropTypes.string.isRequired,
+    //categoryField: PropTypes.string.isRequired,
     facetDepth: PropTypes.number,
     facetLimit: PropTypes.number,
     facetItemComponent: PropTypes.element,

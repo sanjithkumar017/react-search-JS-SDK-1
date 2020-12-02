@@ -3,7 +3,7 @@ import React from 'react';
 import { MultilevelFacets } from '@unbxd-ui/react-search-sdk';
 import { scrollTop } from '../utils';
 
-const FacetItemComponent = ({ itemData, onClick }) => {
+export const FacetItemComponent = ({ itemData, onClick }) => {
     const { name, count, level, isSelected } = itemData;
     const handleClick = () => {
         onClick(itemData);
@@ -22,7 +22,7 @@ const FacetItemComponent = ({ itemData, onClick }) => {
     );
 };
 
-const onFacetClick = (facet) => {
+export const onFacetClick = (facet) => {
     console.log('Facet change :', facet);
     scrollTop();
     return true;

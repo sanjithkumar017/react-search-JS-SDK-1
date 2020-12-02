@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { facetTypes } from '../../config';
 import { conditionalRenderer } from '../../common/utils';
+import { productTypes } from '../../config';
+import { getFacetCoreMethods as getMultilevelFacetCoreMethods} from '../multilevelFacets/utils';
 import {
     getTextFacetItem,
     getTextFacetFacetCoreMethods,
@@ -15,6 +18,24 @@ import GenerateCombinedFacets from './generateCombinedFacets';
 import { executeCallback } from '../../common/utils';
 
 class CombinedFacetsContainer extends React.PureComponent {
+
+    componentDidMount(){
+        const {
+            categoryDisplayName = '',
+            categoryField = '',
+            facetDepth,
+            facetLimit,
+            helpers: { setMultilevelFacetsConfiguration }
+        } = this.props;
+
+        setMultilevelFacetsConfiguration({
+            categoryDisplayName,
+            categoryField,
+            facetDepth,
+            facetLimit
+        });
+    }
+
     //a way to pass data to render props and our component
     getCombinedFacetsProps() {
         const {
@@ -32,7 +53,10 @@ class CombinedFacetsContainer extends React.PureComponent {
             enableViewMore,
             minViewMore,
             label,
-            onFacetClick
+            onFacetClick,
+            multiLevelfacetClick,
+            multiLevelFacetItemComponent,
+            productType
         } = this.props;
 
         const {
@@ -53,6 +77,133 @@ class CombinedFacetsContainer extends React.PureComponent {
             selectedRangeFacets
         } = getRangeFacetCoreMethods(unbxdCore);
 
+        const {
+            getBucketedFacets,
+            getBreadCrumbsList,
+            setCategoryFilter,
+            deleteCategoryFilter,
+        } = getMultilevelFacetCoreMethods(unbxdCore);
+
+        // dfgerhgwerhgwerghwh
+        const bucketedFacets = getBucketedFacets();
+
+        const multilevelFacets = [];
+        let highestBreadcrumbLevel = 0;
+        
+
+        let facetDisplayName = '';
+        bucketedFacets.map((bucketedFacet) => {
+            const {
+                displayName,
+                level,
+                position,
+                multiLevelField,
+                facetName,
+                filterField,
+                values = []
+            } = bucketedFacet;
+            facetDisplayName = displayName;
+
+            const breadCrumbsList = getBreadCrumbsList(filterField);
+            highestBreadcrumbLevel = 0;
+
+            const breadCrumbFacets = breadCrumbsList.map((breadcrumb) => {
+                if (highestBreadcrumbLevel < breadcrumb.level) {
+                    highestBreadcrumbLevel = breadcrumb.level;
+                }
+                return {
+                    filterField: breadcrumb.filterField,
+                    level: breadcrumb.level,
+                    name: breadcrumb.value,
+                    isSelected: true
+                };
+            });
+
+            let formattedBucketedFacets = [];
+            if (
+                highestBreadcrumbLevel === level &&
+                highestBreadcrumbLevel > 0
+            ) {
+                const lastBreadcrumb =
+                    breadCrumbFacets[breadCrumbFacets.length - 1];
+                const hit = values.find((facetValue) => {
+                    const { name } = facetValue;
+                    const { name: breadcrumbName } = lastBreadcrumb;
+                    return breadcrumbName === name;
+                });
+                formattedBucketedFacets = [
+                    {
+                        ...hit,
+                        filterField,
+                        level,
+                        isSelected: true
+                    }
+                ];
+                breadCrumbFacets.pop();
+            } else {
+                formattedBucketedFacets = values.map((facetValue) => {
+                    const { name, count, dataId } = facetValue;
+                    return {
+                        filterField,
+                        level,
+                        name,
+                        count,
+                        dataId
+                    };
+                });
+            }
+
+            const facet = {
+                facetDisplayName,
+                filterField,
+                position,
+                facetName,
+                facetType: facetTypes.MULTILEVEL_FACET,
+                values: [...breadCrumbFacets, ...formattedBucketedFacets]
+            };
+            multilevelFacets.push(facet);
+        });
+
+        //sgrwrherwherbnernre
+
+        const handleMultiLevelFacetClick = (currentItem) => {
+            const { name, filterField: parent, level } = currentItem;
+            const categoryObject = { parent, level, name };
+            const { helpers } = this.props;
+            const { getUpdatedResults } = helpers;
+
+            const onFinish = () => {
+                const { setCategoryId } = unbxdCore;
+                if (
+                    productType === productTypes.CATEGORY &&
+                    typeof setCategoryId === 'function'
+                ) {
+                    const getResults = setCategoryId(categoryObject, unbxdCore);
+                    if (getResults) {
+                        getUpdatedResults();
+                    }
+                } else {
+                    if (highestBreadcrumbLevel === parseInt(level)) {
+                        deleteCategoryFilter(categoryObject);
+                    } else {
+                        //check if it is a breadcrumb
+                        const breadCrumbsList = getBreadCrumbsList(parent);
+                        const hit = breadCrumbsList.find(({ value }) => {
+                            return name === value;
+                        });
+
+                        if (hit) {
+                            deleteCategoryFilter(categoryObject);
+                        } else {
+                            setCategoryFilter(categoryObject);
+                        }
+                    }
+                    getResults();
+                }
+            };
+            executeCallback(onFacetClick, [categoryObject], onFinish);
+        };
+
         const textFacets = getFacets() || [];
         const lastSelectedFacets = getSelectedFacets();
         const applyMultiple = true;
@@ -70,7 +221,8 @@ class CombinedFacetsContainer extends React.PureComponent {
 
         const combinedFacets = [
             ...formattedTextFacets,
-            ...formattedRangeFacets
+            ...formattedRangeFacets,
+            ...multilevelFacets
         ];
 
         combinedFacets &&
@@ -181,12 +333,14 @@ class CombinedFacetsContainer extends React.PureComponent {
             collapsible,
             searchable,
             enableViewMore,
-            minViewMore
+            minViewMore,
+            multiLevelFacetItemComponent
         };
 
         const helpers = {
             onTextFacetClick: handleTextFacetClick,
             onTextFacetClear: handleTextFacetClear,
+            onMultiLevelFacetClick: handleMultiLevelFacetClick,
             setSelectedFacets,
             textFacetItemComponent,
             label,
