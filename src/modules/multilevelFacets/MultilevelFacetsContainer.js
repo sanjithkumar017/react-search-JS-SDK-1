@@ -52,16 +52,12 @@ class MultilevelFacetsContainer extends React.PureComponent {
 
         const multilevelFacets = [];
         let highestBreadcrumbLevel = 0;
-        
 
         let facetDisplayName = '';
         bucketedFacets.map((bucketedFacet) => {
             const {
                 displayName,
                 level,
-                position,
-                multiLevelField,
-                facetName,
                 filterField,
                 values = []
             } = bucketedFacet;
@@ -71,6 +67,7 @@ class MultilevelFacetsContainer extends React.PureComponent {
             highestBreadcrumbLevel = 0;
 
             const breadCrumbFacets = breadCrumbsList.map((breadcrumb) => {
+
                 if (highestBreadcrumbLevel < breadcrumb.level) {
                     highestBreadcrumbLevel = breadcrumb.level;
                 }

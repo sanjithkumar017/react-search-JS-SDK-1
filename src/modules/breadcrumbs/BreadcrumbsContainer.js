@@ -23,8 +23,6 @@ class BreadcrumbsContainer extends React.PureComponent {
             getResults
         } = getFacetCoreMethods(unbxdCore);
 
-        //const breadCrumbsList = getBreadCrumbsList();
-
         const selectedMultilevelFacet = getSelectedBucketedFacet();
         const breadCrumbsList = [];
         Object.keys(selectedMultilevelFacet).map((selectedFacetField) => {
@@ -32,8 +30,7 @@ class BreadcrumbsContainer extends React.PureComponent {
             breadCrumbsList.push(breadcrumbs);
         });
 
-
-        const handleBreadCrumbClick = (currentItem) => {
+        const handleBreadCrumbClick = (currentItem) => { 
             const { value, filterField, level } = currentItem;
             const categoryObject = { parent: filterField, level, name: value };
             const { setCategoryId } = unbxdCore;
