@@ -84,7 +84,6 @@ class CombinedFacetsContainer extends React.PureComponent {
             deleteCategoryFilter,
         } = getMultilevelFacetCoreMethods(unbxdCore);
 
-        // dfgerhgwerhgwerghwh
         const bucketedFacets = getBucketedFacets();
 
         const multilevelFacets = [];
@@ -164,7 +163,6 @@ class CombinedFacetsContainer extends React.PureComponent {
             multilevelFacets.push(facet);
         });
 
-        //sgrwrherwherbnernre
 
         const handleMultiLevelFacetClick = (currentItem) => {
             const { name, filterField: parent, level } = currentItem;
