@@ -54,7 +54,6 @@ class CombinedFacetsContainer extends React.PureComponent {
             minViewMore,
             label,
             onFacetClick,
-            multiLevelfacetClick,
             multiLevelFacetItemComponent,
             productType
         } = this.props;
@@ -373,6 +372,7 @@ CombinedFacetsContainer.propTypes = {
     searchable: PropTypes.bool,
     textFacetItemComponent: PropTypes.element,
     rangeFacetItemComponent: PropTypes.element,
+    multiLevelFacetItemComponent: PropTypes.element,
     transform: PropTypes.func,
     label: PropTypes.node,
     onFacetClick: PropTypes.node
