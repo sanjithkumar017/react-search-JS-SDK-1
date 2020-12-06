@@ -60,7 +60,7 @@ const ProductsListing = () => {
             showSwatches={true}
             groupBy={'variant_color'}
             swatchAttributesMap={swatchAttributesMap}
-            paginationType={'FIXED_PAGINATION'}
+            paginationType={'INFINITE_SCROLL'}
         />
     );
 };

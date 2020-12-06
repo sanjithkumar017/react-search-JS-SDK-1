@@ -12,7 +12,7 @@ class GenerateCombinedFacets extends React.Component {
     }
 
     setFacetValue(facetObj, getResults = false) {
-        const { onFacetClick} = this.props;
+        const { onFacetClick } = this.props;
         const { facetName, valMin, valMax, isSelected } = facetObj;
         const applyMultiple = true;
 
@@ -37,7 +37,10 @@ class GenerateCombinedFacets extends React.Component {
                                     const { dataId: fromValue } = from;
                                     const { dataId: toValue } = end;
 
-                                    if (valMin >= fromValue && valMax <= toValue) {
+                                    if (
+                                        valMin >= fromValue &&
+                                        valMax <= toValue
+                                    ) {
                                         if (!isSelected) {
                                             isFacetSelected = true;
                                         }
@@ -95,9 +98,9 @@ class GenerateCombinedFacets extends React.Component {
         const {
             unbxdCoreStatus,
             combinedFacets,
-            lastSelectedFacets,
-            selectedFacets,
-            setSelectedFacets,
+            lastSelectedTextFacets,
+            selectedTextFacets,
+            setSelectedTextFacets,
             transform
         } = this.props;
         if (combinedFacets !== prevProps.combinedFacets) {
@@ -145,9 +148,11 @@ class GenerateCombinedFacets extends React.Component {
         if (
             prevProps.unbxdCoreStatus !== unbxdCoreStatus &&
             unbxdCoreStatus === searchStatus.READY &&
-            selectedFacets !== lastSelectedFacets
+            selectedTextFacets !== lastSelectedTextFacets
         ) {
-            setSelectedFacets(lastSelectedFacets);
+            setSelectedTextFacets(
+                enableApplyFilters ? selectedTextFacets : lastSelectedTextFacets
+            );
         }
     }
 
@@ -284,7 +289,7 @@ class GenerateCombinedFacets extends React.Component {
 
     render() {
         const {
-            selectedFacets,
+            selectedTextFacets,
             onTextFacetClick,
             onTextFacetClear,
             textFacetItemComponent,
@@ -315,7 +320,7 @@ class GenerateCombinedFacets extends React.Component {
                             viewLess,
                             className
                         } = combinedFacet;
-                        const hasActiveFacets = selectedFacets[facetName]
+                        const hasActiveFacets = selectedTextFacets[facetName]
                             ? true
                             : false;
                         let filteredValues = values;

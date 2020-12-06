@@ -19,11 +19,13 @@ import {
     setFacetsActionConfiguration,
     setViewTypeConfiguration,
     manageTextFacets,
+    manageRangeFacets,
     unbxdCallBack,
     getActiveFacets,
     handleViewTypeClick,
     getUpdatedResults,
-    setSelectedFacets,
+    setSelectedTextFacets,
+    setSelectedRangeFacets,
     resetSearch
 } from './utils';
 import { cloneElement } from './common/utils';
@@ -38,7 +40,8 @@ const initialUnbxdState = {
     viewType: 'GRID',
     paginationType: paginationTypes.FIXED_PAGINATION,
     enableApplyFilters: false,
-    selectedFacets: {}
+    selectedTextFacets: {},
+    selectedRangeFacets: {}
 };
 
 class UnbxdSearchWrapper extends Component {
@@ -51,8 +54,7 @@ class UnbxdSearchWrapper extends Component {
             getCategoryId,
             setCategoryId,
             productType,
-            priceUnit,
-            loaderComponent
+            priceUnit
         } = this.props;
 
         this.unbxdCallBack = unbxdCallBack.bind(this);
@@ -69,7 +71,9 @@ class UnbxdSearchWrapper extends Component {
         this.setSpellCheckConfiguration = setSpellCheckConfiguration.bind(this);
         this.setViewTypeConfiguration = setViewTypeConfiguration.bind(this);
         this.manageTextFacets = manageTextFacets.bind(this);
-        this.setSelectedFacets = setSelectedFacets.bind(this);
+        this.manageRangeFacets = manageRangeFacets.bind(this);
+        this.setSelectedTextFacets = setSelectedTextFacets.bind(this);
+        this.setSelectedRangeFacets = setSelectedRangeFacets.bind(this);
         this.handleViewTypeClick = handleViewTypeClick.bind(this);
         this.getUpdatedResults = getUpdatedResults.bind(this);
         this.resetSearch = resetSearch.bind(this);
@@ -99,7 +103,9 @@ class UnbxdSearchWrapper extends Component {
                 setSpellCheckConfiguration: this.setSpellCheckConfiguration,
                 setViewTypeConfiguration: this.setViewTypeConfiguration,
                 manageTextFacets: this.manageTextFacets,
-                setSelectedFacets: this.setSelectedFacets,
+                manageRangeFacets: this.manageRangeFacets,
+                setSelectedTextFacets: this.setSelectedTextFacets,
+                setSelectedRangeFacets: this.setSelectedRangeFacets,
                 handleViewTypeClick: this.handleViewTypeClick,
                 getUpdatedResults: this.getUpdatedResults,
                 resetSearch: this.resetSearch,
@@ -109,25 +115,6 @@ class UnbxdSearchWrapper extends Component {
         };
 
         this.initialResultLoad = true;
-    }
-
-    getProps() {
-        const {
-            unbxdCore,
-            unbxdCoreStatus,
-            unbxdState,
-            helpers,
-            priceUnit,
-            productType
-        } = this.state;
-        return {
-            unbxdCore,
-            unbxdCoreStatus,
-            unbxdState,
-            helpers,
-            priceUnit,
-            productType
-        };
     }
 
     componentDidMount() {
@@ -175,7 +162,7 @@ class UnbxdSearchWrapper extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { refreshId } = prevProps;
+        const { refreshId } = this.props;
         const { unbxdCore, categoryId } = this.state;
         const urlParams = unbxdCore.getQueryParams();
         const getResults = unbxdCore.getResults.bind(unbxdCore);
@@ -209,7 +196,7 @@ class UnbxdSearchWrapper extends Component {
             urlParams[unbxdCore.options.searchQueryParam]
         ) {
             renderFromUrl();
-        } else if (refreshId !== this.props.refreshId) {
+        } else if (refreshId !== prevProps.refreshId) {
             this.resetSearch();
             getResults();
         }
@@ -221,6 +208,25 @@ class UnbxdSearchWrapper extends Component {
         }
 
         return null;
+    }
+
+    getProps() {
+        const {
+            unbxdCore,
+            unbxdCoreStatus,
+            unbxdState,
+            helpers,
+            priceUnit,
+            productType
+        } = this.state;
+        return {
+            unbxdCore,
+            unbxdCoreStatus,
+            unbxdState,
+            helpers,
+            priceUnit,
+            productType
+        };
     }
 
     render() {

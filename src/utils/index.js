@@ -7,10 +7,12 @@ import setMultilevelFacetsConfiguration from './setMultilevelFacetsConfiguration
 import setFacetsActionConfiguration from './setFacetsActionConfiguration';
 import setViewTypeConfiguration from './setViewTypeConfiguration';
 import manageTextFacets from './manageTextFacets';
+import manageRangeFacets from './manageRangeFacets';
 import unbxdCallBack from './unbxdCallBack';
 import getActiveFacets from './getActiveFacets';
 import handleViewTypeClick from './handleViewTypeClick';
-import setSelectedFacets from './setSelectedFacets';
+import setSelectedTextFacets from './setSelectedTextFacets';
+import setSelectedRangeFacets from './setSelectedRangeFacets';
 import setCategoryPath from './setCategoryPath';
 import getUpdatedResults from './getUpdatedResults';
 import resetSearch from './resetSearch';
@@ -25,10 +27,12 @@ export {
     setFacetsActionConfiguration,
     setViewTypeConfiguration,
     manageTextFacets,
+    manageRangeFacets,
     unbxdCallBack,
     getActiveFacets,
     handleViewTypeClick,
-    setSelectedFacets,
+    setSelectedTextFacets,
+    setSelectedRangeFacets,
     setCategoryPath,
     getUpdatedResults,
     resetSearch

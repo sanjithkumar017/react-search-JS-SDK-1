@@ -15,11 +15,12 @@ class GenerateFacets extends React.Component {
     componentDidUpdate(prevProps) {
         const {
             textFacets,
-            selectedFacets,
-            lastSelectedFacets,
-            setSelectedFacets,
+            selectedTextFacets,
+            lastSelectedTextFacets,
+            setSelectedTextFacets,
             unbxdCoreStatus,
-            transform
+            transform,
+            enableApplyFilters
         } = this.props;
         if (textFacets !== prevProps.textFacets) {
             const formattedTextFacets = textFacets.map((textFacet) => {
@@ -51,9 +52,11 @@ class GenerateFacets extends React.Component {
         if (
             prevProps.unbxdCoreStatus !== unbxdCoreStatus &&
             unbxdCoreStatus === searchStatus.READY &&
-            selectedFacets !== lastSelectedFacets
+            selectedTextFacets !== lastSelectedTextFacets
         ) {
-            setSelectedFacets(lastSelectedFacets);
+            setSelectedTextFacets(
+                enableApplyFilters ? selectedTextFacets : lastSelectedTextFacets
+            );
         }
     }
 
@@ -212,11 +215,11 @@ class GenerateFacets extends React.Component {
 
 GenerateFacets.propTypes = {
     textFacets: PropTypes.arrayOf(PropTypes.object),
-    selectedFacets: PropTypes.object,
-    lastSelectedFacets: PropTypes.object,
+    selectedTextFacets: PropTypes.object,
+    lastSelectedTextFacets: PropTypes.object,
     onFacetClick: PropTypes.func.isRequired,
     onFacetObjectReset: PropTypes.func.isRequired,
-    setSelectedFacets: PropTypes.func.isRequired,
+    setSelectedTextFacets: PropTypes.func.isRequired,
     enableApplyFilters: PropTypes.bool.isRequired,
     unbxdCoreStatus: PropTypes.string.isRequired,
     facetItemComponent: PropTypes.element,

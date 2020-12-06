@@ -20,8 +20,8 @@ class CombinedFacetsContainer extends React.PureComponent {
         const {
             unbxdCore,
             unbxdCoreStatus,
-            helpers: { manageTextFacets, setSelectedFacets },
-            selectedFacets,
+            helpers: { manageTextFacets, setSelectedTextFacets },
+            selectedTextFacets,
             textFacetItemComponent,
             enableApplyFilters,
             rangeFacetItemComponent,
@@ -54,13 +54,13 @@ class CombinedFacetsContainer extends React.PureComponent {
         } = getRangeFacetCoreMethods(unbxdCore);
 
         const textFacets = getFacets() || [];
-        const lastSelectedFacets = getSelectedFacets();
+        const lastSelectedTextFacets = getSelectedFacets();
         const applyMultiple = true;
         const rangeFacets = getRangeFacets() || [];
 
         const formattedTextFacets = getFormattedTextFacets(
             textFacets,
-            selectedFacets
+            selectedTextFacets
         );
 
         const formattedRangeFacets = getFormattedRangeFacets(
@@ -175,8 +175,8 @@ class CombinedFacetsContainer extends React.PureComponent {
             unbxdCoreStatus,
             combinedFacets,
             enableApplyFilters,
-            lastSelectedFacets,
-            selectedFacets,
+            lastSelectedTextFacets,
+            selectedTextFacets,
             priceUnit,
             collapsible,
             searchable,
@@ -187,7 +187,7 @@ class CombinedFacetsContainer extends React.PureComponent {
         const helpers = {
             onTextFacetClick: handleTextFacetClick,
             onTextFacetClear: handleTextFacetClear,
-            setSelectedFacets,
+            setSelectedTextFacets,
             textFacetItemComponent,
             label,
             addRangeFacet,

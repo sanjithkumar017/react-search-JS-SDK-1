@@ -23,7 +23,7 @@ class FacetActionsContainer extends React.PureComponent {
             showClearFilter,
             applyFilterComponent,
             clearFilterComponent,
-            selectedFacets,
+            selectedTextFacets,
             helpers: { manageTextFacets },
             onApply,
             onClear
@@ -42,9 +42,9 @@ class FacetActionsContainer extends React.PureComponent {
         const handleApplyFilter = () => {
             const onFinish = () => {
                 //does not work if we pass it as it is.
-                applyFacets({ ...selectedFacets });
+                applyFacets({ ...selectedTextFacets });
             };
-            executeCallback(onApply, [selectedFacets], onFinish);
+            executeCallback(onApply, [selectedTextFacets], onFinish);
         };
 
         const handleClearFilter = () => {
@@ -55,7 +55,7 @@ class FacetActionsContainer extends React.PureComponent {
                 clearFacets();
                 manageTextFacets(null, null, null, manageStateTypes.CLEAR);
             };
-            executeCallback(onClear, [selectedFacets], onFinish);
+            executeCallback(onClear, [selectedTextFacets], onFinish);
         };
 
         return {
@@ -84,7 +84,7 @@ FacetActionsContainer.propTypes = {
     unbxdCore: PropTypes.object.isRequired,
     unbxdCoreStatus: PropTypes.string.isRequired,
     helpers: PropTypes.object.isRequired,
-    selectedFacets: PropTypes.object,
+    selectedTextFacets: PropTypes.object,
     showApplyFilter: PropTypes.bool,
     showClearFilter: PropTypes.bool,
     applyFilterComponent: PropTypes.element,

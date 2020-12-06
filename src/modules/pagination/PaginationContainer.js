@@ -1,11 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { conditionalRenderer } from '../../common/utils';
+import { conditionalRenderer, executeCallback } from '../../common/utils';
 import PaginationWrapper from './PaginationWrapper';
-import { executeCallback } from '../../common/utils';
 
 class PaginationContainer extends React.PureComponent {
+    componentDidMount() {
+        const { unbxdCore } = this.props;
+        const queryParams = unbxdCore.getQueryParams();
+        const setPageStart = unbxdCore.setPageStart.bind(unbxdCore);
+        if (queryParams.start) {
+            setPageStart(parseInt(queryParams.start));
+        } else {
+            setPageStart(0);
+        }
+    }
+
     getPaginationProps() {
         const { unbxdCore, paginationItemComponent, onPageChange } = this.props;
         const setPageStart = unbxdCore.setPageStart.bind(unbxdCore);
@@ -40,9 +50,11 @@ class PaginationContainer extends React.PureComponent {
         };
 
         const handlePageClick = (pageNumberOption) => {
+            console.log("option ",pageNumberOption.target.dataset.pagenumber)
             const pageNo = pageNumberOption.target
-                ? parseInt(event.target.dataset.pagenumber)
+                ? parseInt(pageNumberOption.target.dataset.pagenumber)
                 : pageNumberOption.pageNumber;
+
             const newPageNumber = (pageNo - 1) * rows;
             const onFinish = () => {
                 setPageStart(newPageNumber);
@@ -70,17 +82,6 @@ class PaginationContainer extends React.PureComponent {
         return { ...data, ...helpers };
     }
 
-    componentDidMount() {
-        const { unbxdCore } = this.props;
-        const queryParams = unbxdCore.getQueryParams();
-        const setPageStart = unbxdCore.setPageStart.bind(unbxdCore);
-        if (queryParams.start) {
-            setPageStart(parseInt(queryParams.start));
-        } else {
-            setPageStart(0);
-        }
-    }
-
     render() {
         const DefaultRender = PaginationWrapper;
 
@@ -94,7 +95,6 @@ class PaginationContainer extends React.PureComponent {
 
 PaginationContainer.propTypes = {
     unbxdCore: PropTypes.object.isRequired,
-    unbxdCoreStatus: PropTypes.string.isRequired,
     helpers: PropTypes.object.isRequired,
     padding: PropTypes.number,
     paginationItemComponent: PropTypes.element,

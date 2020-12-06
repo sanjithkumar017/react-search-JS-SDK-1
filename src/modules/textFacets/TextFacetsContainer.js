@@ -19,8 +19,8 @@ class TextFacetsContainer extends React.PureComponent {
             unbxdCoreStatus,
             facetItemComponent,
             enableApplyFilters,
-            helpers: { manageTextFacets, setSelectedFacets },
-            selectedFacets,
+            helpers: { manageTextFacets, setSelectedTextFacets },
+            selectedTextFacets,
             label,
             collapsible,
             searchable,
@@ -114,20 +114,20 @@ class TextFacetsContainer extends React.PureComponent {
             executeCallback(onFacetClick, [unx_name], onFinish);
         };
 
-        const lastSelectedFacets = getSelectedFacets();
+        const lastSelectedTextFacets = getSelectedFacets();
 
-        //merge lastSelectedFacets and textFacets
+        //merge lastSelectedTextFacets and textFacets
         const formattedTextFacets = getFormattedTextFacets(
             textFacets,
-            selectedFacets
+            selectedTextFacets
         );
 
         const data = {
             unbxdCoreStatus,
             textFacets: formattedTextFacets,
             enableApplyFilters,
-            lastSelectedFacets,
-            selectedFacets,
+            lastSelectedTextFacets,
+            selectedTextFacets,
             collapsible,
             searchable,
             enableViewMore,
@@ -137,7 +137,7 @@ class TextFacetsContainer extends React.PureComponent {
         const helpers = {
             onFacetClick: handleFacetClick,
             onFacetObjectReset: handleFacetObjectReset,
-            setSelectedFacets,
+            setSelectedTextFacets,
             facetItemComponent,
             label,
             transform
@@ -163,7 +163,7 @@ TextFacetsContainer.propTypes = {
     helpers: PropTypes.object.isRequired,
     facetItemComponent: PropTypes.element,
     enableApplyFilters: PropTypes.bool.isRequired,
-    selectedFacets: PropTypes.object.isRequired,
+    selectedTextFacets: PropTypes.object.isRequired,
     label: PropTypes.node,
     collapsible: PropTypes.bool.isRequired,
     searchable: PropTypes.bool.isRequired,

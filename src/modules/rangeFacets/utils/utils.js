@@ -20,20 +20,20 @@ export const getSelectedRangeFacets = (rangeFilterObject) => {
 };
 
 export const getFormattedRangeFacets = (rangeFacets, selectedRangeFacets) => {
-    let selectedFacets = {};
+    let selectedTextFacets = {};
     if (Object.keys(selectedRangeFacets).length) {
-        selectedFacets = getSelectedRangeFacets(selectedRangeFacets);
+        selectedTextFacets = getSelectedRangeFacets(selectedRangeFacets);
     }
 
     const formattedFacets = rangeFacets.map((facetObj) => {
         const { facetName } = facetObj;
 
-        if (selectedFacets[facetName]) {
+        if (selectedTextFacets[facetName]) {
             const { start, end } = facetObj;
             const sliderMin = start;
             const sliderMax = end;
             const { valMin = sliderMin, valMax = sliderMax } =
-                selectedFacets[facetName][0] || {};
+                selectedTextFacets[facetName][0] || {};
             const currentFacetObj = {
                 ...facetObj,
                 facetType: facetTypes.RANGE_FACET,
@@ -45,7 +45,7 @@ export const getFormattedRangeFacets = (rangeFacets, selectedRangeFacets) => {
                 viewLess: false,
                 className: 'UNX-facet__list'
             };
-            const activeFacets = selectedFacets[facetName];
+            const activeFacets = selectedTextFacets[facetName];
             const values = currentFacetObj.values.map((facetitem) => {
                 const { from, end } = facetitem;
                 const { dataId: fromValue } = from;

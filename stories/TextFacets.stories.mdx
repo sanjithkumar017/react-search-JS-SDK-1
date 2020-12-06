@@ -118,18 +118,18 @@ const FacetItemComponent = ({ itemData, onClick }) => {
 
 #### Render prop parameters
 
-| Name               | Type          | Description                       |
-| ------------------ | ------------- | --------------------------------- |
-| textFacets         | array         | facet values.                     |
-| selectedFacets     | object        | selected facet values.            |
-| lastSelectedFacets | object        | previously selected facet values. |
-| setSelectedFacets  | func          | set selected facets.              |
-| enableApplyFilters | bool          | enable apply and clear filters.   |
-| unbxdCoreStatus    | string        | `LOADING`\|`READY`                |
-| onFacetClick       | func          | handle facet click.               |
-| onFacetObjectReset | func          | handle facet clear.               |
-| FacetItemComponent | element\|func | custom component.                 |
-| label              | node          | label for the component.          |
+| Name                   | Type          | Description                       |
+| ---------------------- | ------------- | --------------------------------- |
+| textFacets             | array         | facet values.                     |
+| selectedTextFacets     | object        | selected facet values.            |
+| lastSelectedTextFacets | object        | previously selected facet values. |
+| setSelectedTextFacets  | func          | set selected facets.              |
+| enableApplyFilters     | bool          | enable apply and clear filters.   |
+| unbxdCoreStatus        | string        | `LOADING`\|`READY`                |
+| onFacetClick           | func          | handle facet click.               |
+| onFacetObjectReset     | func          | handle facet clear.               |
+| FacetItemComponent     | element\|func | custom component.                 |
+| label                  | node          | label for the component.          |
 
 <Preview>
     <Story name="with render props">
@@ -140,9 +140,9 @@ const FacetItemComponent = ({ itemData, onClick }) => {
             <TextFacets>
                 {({
                     textFacets,
-                    selectedFacets,
-                    lastSelectedFacets,
-                    setSelectedFacets,
+                    selectedTextFacets,
+                    lastSelectedTextFacets,
+                    setSelectedTextFacets,
                     enableApplyFilters,
                     unbxdCoreStatus,
                     onFacetClick,

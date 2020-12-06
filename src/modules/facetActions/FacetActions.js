@@ -22,14 +22,14 @@ const FacetActions = (props) => {
                     helpers,
                     unbxdState
                 } = appState;
-                const { selectedFacets } = unbxdState;
+                const { selectedTextFacets } = unbxdState;
 
                 return (
                     <FacetActionsContainer
                         unbxdCore={unbxdCore}
                         unbxdCoreStatus={unbxdCoreStatus}
                         helpers={helpers}
-                        selectedFacets={selectedFacets}
+                        selectedTextFacets={selectedTextFacets}
                         {...props}
                     />
                 );

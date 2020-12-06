@@ -15,6 +15,7 @@ class RangeFacetsContainer extends React.PureComponent {
             label,
             collapsible,
             onFacetClick,
+            helpers,
             transform,
             enableViewMore,
             minViewMore,
@@ -28,6 +29,7 @@ class RangeFacetsContainer extends React.PureComponent {
             clearARangeFacet,
             selectedRangeFacets
         } = getRangeFacetCoreMethods(unbxdCore);
+        const { setSelectedRangeFacets } = helpers;
 
         const rangeFacets = getRangeFacets();
 

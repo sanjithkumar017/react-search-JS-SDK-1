@@ -1,6 +1,6 @@
 import { manageStateTypes } from '../config';
 
-function manageTextFacets(
+function manageRangeFacets(
     currentFacet = {},
     selectedFacetName = '',
     selectedFacetId = 0,
@@ -8,7 +8,7 @@ function manageTextFacets(
 ) {
     this.setState((appState) => {
         const { unbxdState, ...remaningState } = appState;
-        const { selectedTextFacets } = unbxdState;
+        const { selectedRangeFacets } = unbxdState;
         let updatedSelectedFacets;
         switch (action) {
             case manageStateTypes.ADD:
@@ -16,7 +16,7 @@ function manageTextFacets(
                     const {
                         [selectedFacetName]: currentFacetListAdd = [],
                         ...remainingStateAdd
-                    } = selectedTextFacets;
+                    } = selectedRangeFacets;
                     const updatedFacetArrayAdd = [
                         ...currentFacetListAdd,
                         currentFacet
@@ -33,7 +33,7 @@ function manageTextFacets(
                     const {
                         [selectedFacetName]: currentFacetListRemove = [],
                         ...remainingStateRemove
-                    } = selectedTextFacets;
+                    } = selectedRangeFacets;
                     const updatedFacetArrayRemove = currentFacetListRemove.filter(
                         (fValue) => fValue.dataId != selectedFacetId
                     );
@@ -51,7 +51,7 @@ function manageTextFacets(
                     // eslint-disable-next-line no-unused-vars
                     [selectedFacetName]: ignoreCurrentFacetList,
                     ...remainingStateReset
-                } = selectedTextFacets;
+                } = selectedRangeFacets;
                 updatedSelectedFacets = remainingStateReset;
                 break;
             }
@@ -67,10 +67,10 @@ function manageTextFacets(
             ...remaningState,
             unbxdState: {
                 ...unbxdState,
-                selectedTextFacets: updatedSelectedFacets
+                selectedRangeFacets: updatedSelectedFacets
             }
         };
     });
 }
 
-export default manageTextFacets;
+export default manageRangeFacets;
