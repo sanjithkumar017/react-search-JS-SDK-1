@@ -24,7 +24,9 @@ class FacetActionsContainer extends React.PureComponent {
             applyFilterComponent,
             clearFilterComponent,
             selectedTextFacets,
-            helpers: { manageTextFacets },
+            selectedRangeFacets,
+            applyMultiple,
+            helpers: { manageTextFacets, manageRangeFacets },
             onApply,
             onClear
         } = this.props;
@@ -32,7 +34,9 @@ class FacetActionsContainer extends React.PureComponent {
         const {
             applyFacets,
             clearFacets,
-            selectedRangeFacets,
+            lastSelectedRangeFacets,
+            setRangeFacet,
+            applyRangeFacet,
             clearARangeFacet,
             getPaginationInfo
         } = getFacetCoreMethods(unbxdCore);
@@ -41,15 +45,32 @@ class FacetActionsContainer extends React.PureComponent {
 
         const handleApplyFilter = () => {
             const onFinish = () => {
+                //apply range facets one by one
+                Object.keys(selectedRangeFacets).map((facetName) => {
+                    selectedRangeFacets[facetName].map((facetItem) => {
+                        const { valMin, valMax } = facetItem;
+                        setRangeFacet({
+                            facetName,
+                            start: valMin,
+                            end: valMax,
+                            applyMultiple
+                        });
+                    });
+                });
+                applyRangeFacet();
                 //does not work if we pass it as it is.
                 applyFacets({ ...selectedTextFacets });
             };
-            executeCallback(onApply, [selectedTextFacets], onFinish);
+            executeCallback(
+                onApply,
+                [selectedTextFacets, selectedRangeFacets],
+                onFinish
+            );
         };
 
         const handleClearFilter = () => {
             const onFinish = () => {
-                Object.keys(selectedRangeFacets).map((rangeFacetName) => {
+                Object.keys(lastSelectedRangeFacets).map((rangeFacetName) => {
                     clearARangeFacet(rangeFacetName);
                 });
                 clearFacets();

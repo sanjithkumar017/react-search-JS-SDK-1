@@ -1,16 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { conditionalRenderer } from '../../common/utils';
+import { conditionalRenderer, executeCallback } from '../../common/utils';
 import GenerateFacets from './GenerateFacets';
+import { manageStateTypes } from '../../config';
 import { getRangeFacetCoreMethods, getFormattedRangeFacets } from './utils';
 
 class RangeFacetsContainer extends React.PureComponent {
+    componentDidMount() {
+        const { helpers, applyMultiple } = this.props;
+        const { setRangeFacetsConfiguration } = helpers;
+        setRangeFacetsConfiguration({ applyMultiple });
+    }
     getRangeFacetsProps() {
         const {
             unbxdCore,
             facetItemComponent,
             enableApplyFilters,
+            selectedRangeFacets,
             priceUnit,
             label,
             collapsible,
@@ -27,16 +34,76 @@ class RangeFacetsContainer extends React.PureComponent {
             setRangeFacet,
             applyRangeFacet,
             clearARangeFacet,
-            selectedRangeFacets
+            lastSelectedRangeFacets
         } = getRangeFacetCoreMethods(unbxdCore);
-        const { setSelectedRangeFacets } = helpers;
+        const { setSelectedRangeFacets, manageRangeFacets } = helpers;
 
         const rangeFacets = getRangeFacets();
 
+        // const parsedSelectedRangeFacets = getSelectedRangeFacets(
+        //     selectedRangeFacets
+        // );
         const formattedRangeFacets = getFormattedRangeFacets(
             rangeFacets,
             selectedRangeFacets
         );
+
+        const handleFacetClick = (currentItem) => {
+            const {
+                from,
+                end,
+                facetName,
+                id,
+                isSelected = false
+            } = currentItem;
+            const { dataId: valMin } = from;
+            const { dataId: valMax } = end;
+
+            const facetObj = { facetName, valMin, valMax, isSelected, id };
+
+            const onFinish = () => {
+                enableApplyFilters &&
+                    manageRangeFacets(
+                        facetObj,
+                        facetName,
+                        id,
+                        isSelected
+                            ? manageStateTypes.REMOVE
+                            : manageStateTypes.ADD
+                    );
+
+                !isSelected &&
+                    !enableApplyFilters &&
+                    addFacet({
+                        facetName,
+                        start: valMin,
+                        end: valMax
+                    });
+                isSelected &&
+                    !enableApplyFilters &&
+                    removeFacet({
+                        facetName
+                    });
+            };
+            executeCallback(onFacetClick, [facetObj, !isSelected], onFinish);
+        };
+
+        const handleFacetObjectReset = (event) => {
+            const { unx_name } = event.target.dataset;
+
+            const onFinish = () => {
+                if (enableApplyFilters) {
+                    manageRangeFacets(unx_name, manageStateTypes.RESET);
+                }
+
+                if (!enableApplyFilters) {
+                    removeFacet({ selectedFacetName: unx_name });
+                    setPageStart(0);
+                    getResults();
+                }
+            };
+            executeCallback(onFacetClick, [unx_name], onFinish);
+        };
 
         const addRangeFacet = (
             { facetName, start, end },
@@ -57,6 +124,9 @@ class RangeFacetsContainer extends React.PureComponent {
 
         return {
             rangeFacets: formattedRangeFacets,
+            onFacetClick: handleFacetClick,
+            onFacetObjectReset: handleFacetObjectReset,
+            handleFacetObjectReset,
             addRangeFacet,
             applyRangeFacet,
             removeRangeFacet,
@@ -67,7 +137,6 @@ class RangeFacetsContainer extends React.PureComponent {
             collapsible,
             transform,
             enableViewMore,
-            onFacetClick,
             minViewMore,
             unbxdCore,
             applyMultiple

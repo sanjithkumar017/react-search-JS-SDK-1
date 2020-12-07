@@ -4,6 +4,7 @@ import setSpellCheckConfiguration from './setSpellCheckConfiguration';
 import setPageSizeConfiguration from './setPageSizeConfiguration';
 import setSortConfiguration from './setSortConfiguration';
 import setMultilevelFacetsConfiguration from './setMultilevelFacetsConfiguration';
+import setRangeFacetsConfiguration from './setRangeFacetsConfiguration';
 import setFacetsActionConfiguration from './setFacetsActionConfiguration';
 import setViewTypeConfiguration from './setViewTypeConfiguration';
 import manageTextFacets from './manageTextFacets';
@@ -24,6 +25,7 @@ export {
     setPageSizeConfiguration,
     setSortConfiguration,
     setMultilevelFacetsConfiguration,
+    setRangeFacetsConfiguration,
     setFacetsActionConfiguration,
     setViewTypeConfiguration,
     manageTextFacets,

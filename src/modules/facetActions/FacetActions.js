@@ -22,7 +22,11 @@ const FacetActions = (props) => {
                     helpers,
                     unbxdState
                 } = appState;
-                const { selectedTextFacets } = unbxdState;
+                const {
+                    selectedTextFacets,
+                    selectedRangeFacets,
+                    applyMultiple
+                } = unbxdState;
 
                 return (
                     <FacetActionsContainer
@@ -30,6 +34,8 @@ const FacetActions = (props) => {
                         unbxdCoreStatus={unbxdCoreStatus}
                         helpers={helpers}
                         selectedTextFacets={selectedTextFacets}
+                        selectedRangeFacets={selectedRangeFacets}
+                        applyMultiple={applyMultiple}
                         {...props}
                     />
                 );

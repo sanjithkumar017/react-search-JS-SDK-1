@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { conditionalRenderer } from '../../common/utils';
+import { conditionalRenderer, executeCallback } from '../../common/utils';
 import {
     getTextFacetItem,
     getTextFacetFacetCoreMethods,
@@ -9,7 +9,6 @@ import {
 } from './utils';
 import { manageStateTypes } from '../../config';
 import GenerateFacets from './generateFacets';
-import { executeCallback } from '../../common/utils';
 
 class TextFacetsContainer extends React.PureComponent {
     //a way to pass data to render props and our component

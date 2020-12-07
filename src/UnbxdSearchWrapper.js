@@ -16,6 +16,7 @@ import {
     setPageSizeConfiguration,
     setSortConfiguration,
     setMultilevelFacetsConfiguration,
+    setRangeFacetsConfiguration,
     setFacetsActionConfiguration,
     setViewTypeConfiguration,
     manageTextFacets,
@@ -41,7 +42,8 @@ const initialUnbxdState = {
     paginationType: paginationTypes.FIXED_PAGINATION,
     enableApplyFilters: false,
     selectedTextFacets: {},
-    selectedRangeFacets: {}
+    selectedRangeFacets: {},
+    applyMultiple: false
 };
 
 class UnbxdSearchWrapper extends Component {
@@ -61,6 +63,9 @@ class UnbxdSearchWrapper extends Component {
         this.setPageSizeConfiguration = setPageSizeConfiguration.bind(this);
         this.setSortConfiguration = setSortConfiguration.bind(this);
         this.setMultilevelFacetsConfiguration = setMultilevelFacetsConfiguration.bind(
+            this
+        );
+        this.setRangeFacetsConfiguration = setRangeFacetsConfiguration.bind(
             this
         );
         this.setFacetsActionConfiguration = setFacetsActionConfiguration.bind(
@@ -99,6 +104,7 @@ class UnbxdSearchWrapper extends Component {
                 setSortConfiguration: this.setSortConfiguration,
                 setMultilevelFacetsConfiguration: this
                     .setMultilevelFacetsConfiguration,
+                setRangeFacetsConfiguration: this.setRangeFacetsConfiguration,
                 setFacetsActionConfiguration: this.setFacetsActionConfiguration,
                 setSpellCheckConfiguration: this.setSpellCheckConfiguration,
                 setViewTypeConfiguration: this.setViewTypeConfiguration,

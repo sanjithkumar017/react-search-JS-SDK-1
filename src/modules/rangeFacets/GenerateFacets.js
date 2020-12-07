@@ -16,6 +16,54 @@ class GenerateFacets extends React.Component {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        const {
+            rangeFacets,
+            selectedRangeFacets,
+            lastSelectedRangeFacets,
+            setSelectedRangeFacets,
+            unbxdCoreStatus,
+            transform,
+            enableApplyFilters
+        } = this.props;
+        if (rangeFacets !== prevProps.rangeFacets) {
+            const formattedRangeFacets = textFacets.map((textFacet) => {
+                const { textFacetsList } = this.state;
+                const matchTextFacet = textFacetsList.find(
+                    (facetObj) => facetObj.facetName === textFacet.facetName
+                );
+                return {
+                    ...textFacet,
+                    isOpen: matchTextFacet ? matchTextFacet.isOpen : true,
+                    viewLess: false
+                };
+            });
+
+            if (transform && typeof transform === 'function') {
+                let returnedFacets = transform.call(formattedRangeFacets);
+                this.setState(() => {
+                    return { rangeFacetsList: returnedFacets };
+                });
+            } else {
+                this.setState(() => {
+                    return { rangeFacetsList: formattedRangeFacets };
+                });
+            }
+        }
+
+        if (
+            prevProps.unbxdCoreStatus !== unbxdCoreStatus &&
+            unbxdCoreStatus === searchStatus.READY &&
+            selectedRangeFacets !== lastSelectedRangeFacets
+        ) {
+            setSelectedRangeFacets(
+                enableApplyFilters
+                    ? selectedRangeFacets
+                    : lastSelectedRangeFacets
+            );
+        }
+    }
+
     setFacetValue(facetObj, getResults = false) {
         const { onFacetClick, applyMultiple } = this.props;
         const { facetName, valMin, valMax, isSelected } = facetObj;
@@ -88,11 +136,6 @@ class GenerateFacets extends React.Component {
         executeCallback(onFacetClick, [facetObj, !isSelected], onFinish);
     }
 
-    onApplyFilter = () => {
-        const { applyRangeFacet } = this.props;
-        applyRangeFacet();
-    };
-
     onClearFilter = (event) => {
         const facetName = event.target.dataset['unx_facetname'];
         const { applyMultiple } = this.props;
@@ -129,15 +172,15 @@ class GenerateFacets extends React.Component {
         !applyMultiple && this.onApplyFilter();
     };
 
-    handleFacetClick = (currentItem) => {
-        const { from, end, facetName, isSelected = false } = currentItem;
-        const { dataId: valMin } = from;
-        const { dataId: valMax } = end;
+    // handleFacetClick = (currentItem) => {
+    //     const { from, end, facetName, isSelected = false } = currentItem;
+    //     const { dataId: valMin } = from;
+    //     const { dataId: valMax } = end;
 
-        const { enableApplyFilters } = this.props;
-        const facetObj = { facetName, valMin, valMax, isSelected };
-        this.setFacetValue(facetObj, !enableApplyFilters);
-    };
+    //     const { enableApplyFilters } = this.props;
+    //     const facetObj = { facetName, valMin, valMax, isSelected };
+    //     this.setFacetValue(facetObj, !enableApplyFilters);
+    // };
 
     handleCollapseToggle = (event) => {
         const facetName = event.target.dataset['unx_name'];
@@ -206,6 +249,8 @@ class GenerateFacets extends React.Component {
     render() {
         const { rangeFacetsList } = this.state;
         const {
+            onFacetClick,
+            onFacetObjectReset,
             facetItemComponent,
             priceUnit,
             label,
@@ -254,7 +299,7 @@ class GenerateFacets extends React.Component {
                             <List
                                 items={values}
                                 ListItem={facetItemComponent || FacetItem}
-                                onClick={this.handleFacetClick}
+                                onClick={onFacetClick}
                                 className={`UNX-facet__list ${
                                     viewLess ? 'UNX-facet__listShowLimited' : ''
                                 }`}
@@ -262,7 +307,7 @@ class GenerateFacets extends React.Component {
                             />
                             {isSelected && (
                                 <div
-                                    onClick={this.onClearFilter}
+                                    onClick={onFacetObjectReset}
                                     data-unx_facetname={facetName}
                                     className="-clear"
                                 >

@@ -19,12 +19,7 @@ export const getSelectedRangeFacets = (rangeFilterObject) => {
     return selectedRangeFacets;
 };
 
-export const getFormattedRangeFacets = (rangeFacets, selectedRangeFacets) => {
-    let selectedTextFacets = {};
-    if (Object.keys(selectedRangeFacets).length) {
-        selectedTextFacets = getSelectedRangeFacets(selectedRangeFacets);
-    }
-
+export const getFormattedRangeFacets = (rangeFacets, selectedTextFacets) => {
     const formattedFacets = rangeFacets.map((facetObj) => {
         const { facetName } = facetObj;
 
